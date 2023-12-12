@@ -8,16 +8,6 @@
 import UIKit
 import CoreData
 
-struct UserModel{
-    var email:String
-    var name:String
-}
-
-enum AlertMode{
-    case add
-    case update(email:String,name:String,index:Int)
-}
-
 class ViewController: UIViewController {
     @IBOutlet weak var tblOutlet: UITableView!
     var userArr = [UserModel]()
@@ -53,17 +43,13 @@ extension ViewController{
                 print("not Save \(error),\(error.userInfo)")
             }
         }
-        
     }
-    
     //MARK: - FETCH RECORDS
     func fetchAllRecords(){
         //1 create appdelegate Singleton object
         guard  let appdelegate = UIApplication.shared.delegate as? AppDelegate else {return }
-        
         //2.Access persistentContainer from appdelegate Singleton object and Access the singleton managed object context
         let viewContext = appdelegate.persistentContainer.viewContext
-        
         //3. Creating fetch request using this we can only filter NSManagedObject having entity name Student.
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
         do {
@@ -80,7 +66,9 @@ extension ViewController{
     }
     //MARK: - UPDATE RECORDS
     func updateRecords(name:String,newName:String,email:String,newEmail:String) {
+        //create appdelegate Singleton object
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        //Access persistentContainer from appdelegate Singleton object and Access the singleton managed object context
         let viewContext = appDelegate.persistentContainer.viewContext
         // Prepare the request of type NSFetchRequest for the entity
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
@@ -105,24 +93,21 @@ extension ViewController{
     }
     //MARK: - DELETE RECORDS
     func deleteRecords(name:String) {
+        //create appdelegate Singleton object
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        //Access persistentContainer from appdelegate Singleton object and Access the singleton managed object context
         let viewContext = appDelegate.persistentContainer.viewContext
-        
         // Prepare the request of type NSFetchRequest for the entity
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
-        
         // Add a predicate to fetch specific records you want to delete
         fetchRequest.predicate = NSPredicate(format: "name == %@", name)
-        
         do {
             // Fetch the records based on the fetch request
             let fetchedRecords = try viewContext.fetch(fetchRequest) as! [NSManagedObject]
-            
             // Delete fetched records
             for record in fetchedRecords {
                 viewContext.delete(record)
             }
-            
             // Save the context to persist changes (deletions)
             try viewContext.save()
             tblOutlet.reloadData()
@@ -203,7 +188,6 @@ extension ViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userArr.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as UITableViewCell
         cell.textLabel?.text = userArr[indexPath.row].name
@@ -212,28 +196,22 @@ extension ViewController:UITableViewDataSource,UITableViewDelegate{
         tblOutlet.estimatedRowHeight = 68.0
         return cell
     }
-    func tableView(_ tableView: UITableView,
-                   editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    func tableView(_ tableView: UITableView,editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
     //MARK: - SWIPE TO EDIT AND DELETE FUNCTIONALITY
-    func tableView(_ tableView: UITableView,
-                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView,trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // Archive action
-        let edit = UIContextualAction(style: .normal,
-                                      title: "Edit") { [weak self] (action, view, completionHandler) in
+        let edit = UIContextualAction(style: .normal,title: "Edit") { [weak self] (action, view, completionHandler) in
             if let user = self?.userArr[indexPath.row]{
-                
                 self?.showAlert(mode: .update(email: user.email, name: user.name, index: indexPath.row))
-                
             }
             completionHandler(true)
         }
         edit.backgroundColor = .systemGreen
         
         // Trash action
-        let delete = UIContextualAction(style: .destructive,
-                                        title: "Delete") { [weak self] (action, view, completionHandler) in
+        let delete = UIContextualAction(style: .destructive,title: "Delete") { [weak self] (action, view, completionHandler) in
             guard let self = self else { return } //
             let user = userArr[indexPath.row]
             deleteRecords(name: user.name)
@@ -242,9 +220,17 @@ extension ViewController:UITableViewDataSource,UITableViewDelegate{
             completionHandler(true)
         }
         delete.backgroundColor = .systemRed
-        
         let configuration = UISwipeActionsConfiguration(actions: [edit, delete])
-        
         return configuration
     }
+}
+//MARK: - USER MODEL
+struct UserModel{
+    var email:String
+    var name:String
+}
+//MARK: - ALERTMODE ENUM
+enum AlertMode{
+    case add
+    case update(email:String,name:String,index:Int)
 }
