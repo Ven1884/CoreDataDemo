@@ -41,6 +41,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BB0288722B32DBDB00C3BED3 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				BB0288732B32DC0200C3BED3 /* SMCoreData */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		BB0288732B32DC0200C3BED3 /* SMCoreData */ = {
+			isa = PBXGroup;
+			children = (
+				BB02886F2B32DA2700C3BED3 /* SMDBHelper.swift */,
+			);
+			name = SMCoreData;
+			sourceTree = "<group>";
+		};
 		BB47E64C2B23506E001A9BC9 = {
 			isa = PBXGroup;
 			children = (
@@ -63,7 +79,7 @@
 				BB47E6582B23506E001A9BC9 /* AppDelegate.swift */,
 				BB47E65A2B23506E001A9BC9 /* SceneDelegate.swift */,
 				BB47E65C2B23506E001A9BC9 /* ViewController.swift */,
-				BB02886F2B32DA2700C3BED3 /* SMDBHelper.swift */,
+				BB0288722B32DBDB00C3BED3 /* Sources */,
 				BB47E65E2B23506E001A9BC9 /* Main.storyboard */,
 				BB47E6642B23506E001A9BC9 /* Assets.xcassets */,
 				BB47E6662B23506E001A9BC9 /* LaunchScreen.storyboard */,
